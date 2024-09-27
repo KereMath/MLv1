@@ -1,0 +1,38 @@
+<div class="page-background"></div> <!-- Arka plan divi tüm sayfayı kaplar -->
+
+<div class="document-details">
+  <h1>Document Insights</h1>
+  <p> {{ documentData.original_name }}</p>
+
+  <!-- CSV veya Excel Tablosunu Göster -->
+  <table *ngIf="tableData.length > 0" class="data-table">
+    <!-- Table header stays fixed -->
+    <thead>
+      <tr>
+        <th *ngFor="let header of tableData[0]">{{ header }}</th> <!-- First row for header -->
+      </tr>
+    </thead>
+
+    <!-- Table body will paginate -->
+    <tbody>
+      <tr *ngFor="let row of displayedData">
+        <td *ngFor="let cell of row">{{ cell }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Sayfa ilerleme ve geri butonları -->
+  <div class="pagination-controls">
+    <button (click)="previousPage()" class="pagination-btn">Previous</button>
+    <button (click)="nextPage()" class="pagination-btn">Next</button>
+    <p>Page {{ currentPage + 1 }} of {{ getTotalPages() }}</p> <!-- Page display -->
+  </div>
+  
+</div>
+
+<div class="background1">
+  <!-- Hareketli şekiller ve gradient arka plan -->
+  <div class="shape shape1"></div>
+  <div class="shape shape2"></div>
+  <div class="shape shape3"></div>
+</div>

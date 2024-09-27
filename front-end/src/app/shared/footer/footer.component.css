@@ -1,21 +1,21 @@
 /* The footer area */
 .footer-info {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    color: #fff;
-    padding: 20px 0;
-    text-align: center;
-    margin-left:-8px ;
-  }
-  
-  .footer-info a {
-    color: #00ccff;
-    text-decoration: underline;
-  }
-  
-  .footer-info a:hover {
-    color: #ff66cc;
-  }
-  
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  padding: 30px 0;
+  text-align: center;
+  margin-left:-8px ;
+  height:20px;
+}
+
+.footer-info a {
+  color: #00ccff;
+  text-decoration: underline;
+}
+
+.footer-info a:hover {
+  color: #ff66cc;
+}

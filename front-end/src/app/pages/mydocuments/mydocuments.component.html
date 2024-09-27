@@ -3,8 +3,10 @@
   <ul>
     <li *ngFor="let document of documents">
       {{ document.OriginalName }}  <!-- Orijinal dosya adı burada gösteriliyor -->
-      <button (click)="deleteDocument(document.ID)">Delete</button> <!-- Silme butonu -->
-
+      <div class="button-group">
+        <button class="delete-btn" (click)="confirmDelete(document.ID)">Delete</button> <!-- Silme butonu -->
+        <button class="insights-btn" (click)="viewInsights(document.ID)">Insights</button> <!-- Insights butonu -->
+      </div>
     </li>
   </ul>
 </div>

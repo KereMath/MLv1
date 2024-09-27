@@ -33,6 +33,8 @@ func main() {
 	r.GET("/validate-token", middleware.ValidateToken())          // Token doğrulama rotası
 	r.GET("/documents", handlers.GetDocumentsHandler(documentCollection))
 	r.DELETE("/delete-file/:id", handlers.DeleteFileHandler(documentCollection)) // Dosya silme rotası
+	r.GET("/documents/:docID", handlers.GetSingleDocumentHandler(documentCollection)) // Yeni route
+    r.GET("/document-content/:docID", handlers.DocumentContentHandler(documentCollection)) // Document content route
 
 	// Start the server
 	r.Run(":8080")

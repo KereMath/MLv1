@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 interface Document {
   ID: string;              // MongoDB'deki ID'yi karşılamak için
@@ -19,7 +20,7 @@ interface Document {
 export class MyDocumentsComponent implements OnInit {
   documents: Document[] = []; // Belgeleri obje olarak tutuyoruz
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
     this.getDocuments();
@@ -35,14 +36,20 @@ export class MyDocumentsComponent implements OnInit {
     const headers = { 'Authorization': `Bearer ${token}` };
     this.http.get<{documents: Document[]}>('http://localhost:8080/documents', { headers })
       .subscribe(response => {
-        console.log("Response: ", response);  // Yanıtı inceleyin
         this.documents = response.documents;
         console.log("Documents fetched: ", this.documents);
       }, error => {
         console.error('Error fetching documents:', error);
       });
   }
-  
+
+  // Confirm deletion
+  confirmDelete(documentId: string): void {
+    const userConfirmed = confirm('Are you sure you want to delete this document?');
+    if (userConfirmed) {
+      this.deleteDocument(documentId);
+    }
+  }
 
   // Dökümanı silme işlemi
   deleteDocument(documentId: string): void {
@@ -60,5 +67,9 @@ export class MyDocumentsComponent implements OnInit {
       }, error => {
         console.error('Error deleting document:', error);
       });
+  }
+
+  viewInsights(documentId: string): void {
+    this.router.navigate([`/singleDoc/${documentId}`]);  // Yönlendirme yapılıyor
   }
 }

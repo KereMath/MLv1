@@ -1,6 +1,12 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+// Dosya uzantısını kontrol eden bir yardımcı fonksiyon
+function isValidFileExtension(fileName: string): boolean {
+  const allowedExtensions = ['csv', 'xls', 'xlsx'];  // İzin verilen uzantılar
+  const fileExtension = fileName.split('.').pop()?.toLowerCase(); // Dosya uzantısını al
+  return allowedExtensions.includes(fileExtension || '');
+}
 
 @Component({
   selector: 'app-upload',
@@ -14,15 +20,21 @@ export class UploadComponent {
   constructor(private http: HttpClient, private router: Router) {}
 
   // Dosya seçildiğinde çağrılan fonksiyon
-onFileSelected(event: any): void {
-  this.selectedFile = event.target.files[0];
-  const file=this.selectedFile;
-  if (file) {
-    const fileNameElement = document.getElementById('file-name');
-    fileNameElement!.textContent = file.name;
-  }
-}
+  onFileSelected(event: any): void {
+    this.selectedFile = event.target.files[0];
+    const file = this.selectedFile;
+    if (file) {
+      const fileNameElement = document.getElementById('file-name');
+      fileNameElement!.textContent = file.name;
 
+      // Dosya uzantısını kontrol ediyoruz
+      if (!isValidFileExtension(file.name)) {
+        alert('Invalid file type. Please upload a CSV or Excel file.');
+        this.selectedFile = null; // Geçersiz dosya seçildiğinde sıfırla
+        return;
+      }
+    }
+  }
 
   // Form submit edildiğinde çağrılan fonksiyon
   onSubmit(): void {
@@ -56,7 +68,7 @@ onFileSelected(event: any): void {
       alert('Please select a file to upload.');
     }
   }
-  
+
   goToMyDocuments(): void {
     this.router.navigate(['/mydocuments']);
   }

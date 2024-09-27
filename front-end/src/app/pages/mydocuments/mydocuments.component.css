@@ -92,7 +92,7 @@ h2::after {
   content: '';
   display: block;
   width: 80px;
-  height: 5px;
+  height: k;
   background-color: #ff69b4;
   margin: 10px auto;
   border-radius: 5px;
@@ -170,4 +170,46 @@ button:focus {
   background-size: 400% 400%;
   z-index: -1;
   animation: gradientShift 10s ease infinite;
+}
+/* Delete Butonu için stil */
+/* Buttonları düzenlemek için container */
+.button-group {
+  display: flex;              /* Butonları yan yana yerleştirir */
+  gap: 10px;                  /* Butonlar arasındaki boşluğu ayarlar */
+  margin-top: 10px;           /* Butonların üst kısmına biraz boşluk ekler */
+}
+
+/* Delete Butonu için stil */
+.delete-btn {
+  background-color: #ff6666;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+}
+
+.delete-btn:hover {
+  background-color: #ff3333;
+  transform: scale(1.05);
+}
+
+/* Insights Butonu için stil */
+.insights-btn {
+  background-color: #66b3ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.insights-btn:hover {
+  background-color: #3399ff;
+  transform: scale(1.05);
 }
