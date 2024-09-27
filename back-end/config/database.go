@@ -10,9 +10,8 @@ import (
 )
 
 // SetupDatabase establishes the MongoDB connection
-func SetupDatabase() (*mongo.Client, *mongo.Collection) {
-	clientOptions := options.Client().
-		ApplyURI("mongodb+srv://kerem:H%23Ec3UCPNCDL%40ZP@cluster0.cvrfj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+func SetupDatabase() (*mongo.Client, *mongo.Collection, *mongo.Collection) {
+	clientOptions := options.Client().ApplyURI("mongodb+srv://kerem:H%23Ec3UCPNCDL%40ZP@cluster0.cvrfj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 	client, err := mongo.NewClient(clientOptions)
 	if err != nil {
@@ -26,8 +25,9 @@ func SetupDatabase() (*mongo.Client, *mongo.Collection) {
 		log.Fatal(err)
 	}
 
-	// Connect to the userdb database and users collection
+	// Connect to the userdb database and users and documents collections
 	userCollection := client.Database("userdb").Collection("users")
+	documentCollection := client.Database("userdb").Collection("documents")
 
-	return client, userCollection
+	return client, userCollection, documentCollection
 }

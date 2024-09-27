@@ -2,17 +2,19 @@ package handlers
 
 import (
 	"fmt"
-	"io/ioutil"
 	"net/http"
-	"os"
-	"path/filepath"
 
+	"your-backend-module/models"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
-// GetDocumentsHandler handles retrieving user documents
-func GetDocumentsHandler() gin.HandlerFunc {
+// GetDocumentsHandler retrieves documents from the MongoDB collection based on the user ID
+func GetDocumentsHandler(documentCollection *mongo.Collection) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		fmt.Println("GetDocumentsHandler started")
 
@@ -49,47 +51,42 @@ func GetDocumentsHandler() gin.HandlerFunc {
 		}
 
 		// Token'dan userID'yi alıyoruz
-		userID, ok := claims["user_id"].(string)
+		userIDString, ok := claims["user_id"].(string)
 		if !ok {
 			fmt.Println("Could not extract user ID from token claims")
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not extract user ID from token"})
 			return
 		}
-		fmt.Println("User ID extracted from token:", userID)
 
-		// Kullanıcının klasörüne bakıyoruz
-		userFolder := filepath.Join("..", "data", userID)
-		fmt.Println("User folder path:", userFolder)
-
-		if _, err := os.Stat(userFolder); os.IsNotExist(err) {
-			fmt.Println("User folder does not exist")
-			c.JSON(http.StatusNotFound, gin.H{"error": "No documents found"})
-			return
-		}
-
-		// Klasördeki dosyaları listeliyoruz
-		fmt.Println("Reading files in user folder")
-		files, err := ioutil.ReadDir(userFolder)
+		userID, err := primitive.ObjectIDFromHex(userIDString)
 		if err != nil {
-			fmt.Println("Error reading user folder:", err)
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not read user folder"})
+			fmt.Println("Invalid user ID format")
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user ID"})
 			return
 		}
 
-		// Dosya adlarını bir slice içinde topluyoruz
-		fmt.Println("Building file list")
-		fileList := []string{}
-		for _, file := range files {
-			fmt.Println("Found file:", file.Name())
-			fileList = append(fileList, file.Name())
+		// Kullanıcının sahip olduğu dökümanları MongoDB'den sorguluyoruz
+		filter := bson.M{"owner": userID}
+		findOptions := options.Find()
+
+		cursor, err := documentCollection.Find(c, filter, findOptions)
+		if err != nil {
+			fmt.Println("Error finding documents for user:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not retrieve documents"})
+			return
 		}
 
-		// Dosya listesini JSON olarak döndürüyoruz
-		fmt.Println("Returning file list as JSON")
-		fmt.Println(fileList)
+		var documents []models.Document
+		if err = cursor.All(c, &documents); err != nil {
+			fmt.Println("Error decoding documents:", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error decoding documents"})
+			return
+		}
 
+		// Kullanıcıya dökümanları JSON formatında döndürüyoruz
+		fmt.Println("Returning documents as JSON")
 		c.JSON(http.StatusOK, gin.H{
-			"documents": fileList,
+			"documents": documents,
 		})
 	}
 }

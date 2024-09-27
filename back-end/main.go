@@ -21,19 +21,18 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	// Validate token route'u
-
 	// Setup database connection
-	client, userCollection := config.SetupDatabase()
-	defer client.Disconnect(context.Background()) // 'nil' yerine 'context.Background()' kullanıldı
+	client, userCollection, documentCollection := config.SetupDatabase()
+	defer client.Disconnect(context.Background())
 
 	// Routes
 	r.GET("/hello-backend", handlers.HelloHandler)
 	r.POST("/register", handlers.RegisterHandler(userCollection))
 	r.POST("/login", handlers.LoginHandler(userCollection))
-	r.POST("/upload", handlers.UploadHandler())
-    r.GET("/validate-token", middleware.ValidateToken()) // Token doğrulama rotası
-	r.GET("/documents", handlers.GetDocumentsHandler())
+	r.POST("/upload", handlers.UploadHandler(documentCollection)) // Upload rotasına documentCollection eklendi
+	r.GET("/validate-token", middleware.ValidateToken())          // Token doğrulama rotası
+	r.GET("/documents", handlers.GetDocumentsHandler(documentCollection))
+	r.DELETE("/delete-file/:id", handlers.DeleteFileHandler(documentCollection)) // Dosya silme rotası
 
 	// Start the server
 	r.Run(":8080")

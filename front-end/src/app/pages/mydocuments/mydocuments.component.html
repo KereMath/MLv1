@@ -1,10 +1,10 @@
-
 <div class="documents-container">
   <h2>Your Documents</h2>
   <ul>
     <li *ngFor="let document of documents">
-      {{ document }}
-      <button>Download</button>
+      {{ document.OriginalName }}  <!-- Orijinal dosya adı burada gösteriliyor -->
+      <button (click)="deleteDocument(document.ID)">Delete</button> <!-- Silme butonu -->
+
     </li>
   </ul>
 </div>
@@ -15,4 +15,3 @@
   <div class="shape shape2"></div>
   <div class="shape shape3"></div>
 </div>
-
