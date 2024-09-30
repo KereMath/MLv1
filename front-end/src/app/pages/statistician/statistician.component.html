@@ -1,0 +1,74 @@
+<!-- Belge seçilmeden sorular görünmesin -->
+<div *ngIf="!isDocumentLocked" class="documents-container">
+    <h2>Select a Document</h2>
+    <ul>
+        <li *ngFor="let document of documents">
+            <input type="radio" name="document" [value]="document.ID" (change)="selectDocument(document)" [disabled]="isDocumentLocked">
+            {{ document.OriginalName }}
+        </li>
+    </ul>
+
+    <!-- "Select" butonu belgelere tıklandıktan sonra aktifleşir -->
+    <button [disabled]="!selectedDocument" (click)="lockSelectedDocument()">Select</button>
+</div>
+
+<!-- Eğer bir belge seçilmişse ve kilitlenmişse soruları göster -->
+<div *ngIf="isDocumentLocked" class="questions-container">
+    <h3>You have selected: {{ selectedDocument?.OriginalName }}</h3>
+
+    <!-- İlk soru: ML mi yoksa Rapor mu oluşturulsun? -->
+<!-- İlk soru: ML mi yoksa Rapor mu oluşturulsun? -->
+<div *ngIf="currentQuestionIndex === 0" class="question-box" data-question-number="1">
+    <label>Do you want to predict the future with ML or just create a report?</label>
+    <div>
+        <input type="radio" id="ml" name="option" value="ml" (change)="onSelectOption('ml')">
+        <label for="ml">Predict future with ML</label>
+    </div>
+    <div>
+        <input type="radio" id="report" name="option" value="report" (change)="onSelectOption('report')">
+        <label for="report">Create Report</label>
+    </div>
+    <!-- Ensure selectedOption is a string by using non-null assertion `!` -->
+    <button [disabled]="!selectedOption" (click)="sendAnswerToBackend(1, selectedOption!)">Run</button>
+</div>
+
+
+    <!-- ML seçilmişse birer birer soruları göster -->
+    <div *ngIf="selectedOption === 'ml'" class="additional-questions">
+        <h4>Questions for ML Prediction:</h4>
+
+        <div *ngFor="let question of mlQuestions; let i = index">
+            <div class="question-box" [attr.data-question-number]="i + 2" *ngIf="currentQuestionIndex === i + 1">
+                <label>{{ question }}</label>
+                <div>
+                    <input type="radio" name="ml-answer-{{i}}" value="Option 1" [(ngModel)]="mlAnswers[i]"> 1
+                    <input type="radio" name="ml-answer-{{i}}" value="Option 2" [(ngModel)]="mlAnswers[i]"> 2
+                    <input type="radio" name="ml-answer-{{i}}" value="Option 3" [(ngModel)]="mlAnswers[i]"> 3
+                </div>
+                <!-- Call sendAnswerToBackend with the question ID and selected answer -->
+                <button [disabled]="!mlAnswers[i]" (click)="sendAnswerToBackend(i + 2, mlAnswers[i])">Run</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rapor seçilmişse birer birer soruları göster -->
+    <div *ngIf="selectedOption === 'report'" class="additional-questions">
+        <h4>Questions for Report:</h4>
+
+        <div *ngFor="let question of reportQuestions; let i = index">
+            <div class="question-box" [attr.data-question-number]="i + 2" *ngIf="currentQuestionIndex === i + 1">
+                <label>{{ question }}</label>
+                <div>
+                    <input type="radio" name="report-answer-{{i}}" value="Option 1" [(ngModel)]="reportAnswers[i]"> 1
+                    <input type="radio" name="report-answer-{{i}}" value="Option 2" [(ngModel)]="reportAnswers[i]"> 2
+                    <input type="radio" name="report-answer-{{i}}" value="Option 3" [(ngModel)]="reportAnswers[i]"> 3
+                </div>
+                <!-- Call sendAnswerToBackend with the question ID and selected answer -->
+                <button [disabled]="!reportAnswers[i]" (click)="sendAnswerToBackend(i + 2, reportAnswers[i])">Run</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Proceed button -->
+    <button [disabled]="!canProceed()" (click)="proceed()">Proceed</button>
+</div>

@@ -1,9 +1,13 @@
 <nav class="navbar">
-    <ul>
-      <li><a routerLink="/home">Home</a></li>
-      <li><a routerLink="/about">About</a></li>
-      <li><a routerLink="/services">Services</a></li>
-      <li><a routerLink="/contact">Contact</a></li>
-    </ul>
-  </nav>
-  
+  <ul>
+    <li><a routerLink="/hello">Home</a></li>
+    
+    <!-- Login butonu sadece token yoksa görünsün -->
+    <li *ngIf="!isLoggedIn"><a routerLink="/login">Login</a></li>
+    <li *ngIf="!isLoggedIn"><a routerLink="/register">Register</a></li>
+
+    <!-- Token varsa diğer butonlar görünsün -->
+    <li *ngIf="isLoggedIn"><a routerLink="/upload">Upload</a></li>
+    <li *ngIf="isLoggedIn"><a routerLink="/mydocuments">Documents</a></li>
+  </ul>
+</nav>

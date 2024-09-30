@@ -35,6 +35,7 @@ func main() {
 	r.DELETE("/delete-file/:id", handlers.DeleteFileHandler(documentCollection)) // Dosya silme rotası
 	r.GET("/documents/:docID", handlers.GetSingleDocumentHandler(documentCollection)) // Yeni route
     r.GET("/document-content/:docID", handlers.DocumentContentHandler(documentCollection)) // Document content route
+	r.POST("/process-question", handlers.PipelineManagerHandler)
 
 	// Start the server
 	r.Run(":8080")

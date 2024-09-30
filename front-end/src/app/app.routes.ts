@@ -6,6 +6,7 @@ import { UploadComponent } from './pages/upload/upload.component';
 import { AuthGuard } from './guards/auth.guard'; // Guard'ı import ediyoruz
 import { MyDocumentsComponent } from './pages/mydocuments/mydocuments.component';
 import { SingleDocumentComponent } from './pages/single-document/single-document.component';
+import { StatisticianComponent } from './pages/statistician/statistician.component';
 
 export const routes: Routes = [
   { path: 'hello', component: HelloComponent },
@@ -27,4 +28,10 @@ export const routes: Routes = [
     component: SingleDocumentComponent ,
     canActivate: [AuthGuard], // Bu route için AuthGuard ekliyoruz
   },
+  {
+    path: 'statistician',
+    component: StatisticianComponent,  // Make sure you have this component created
+    canActivate: [AuthGuard], // Add AuthGuard if needed
+  },
+  
 ];

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';  
+import { ActivatedRoute,Router } from '@angular/router';  
 import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';  
 import * as Papa from 'papaparse';  
@@ -102,4 +102,8 @@ export class SingleDocumentComponent implements OnInit {
   getTotalPages(): number {
     return Math.ceil((this.tableData.length - 2) / this.rowsPerPage); // Exclude the header row from pagination
   }
+  goToStatistician(): void {
+    window.location.href = '/statistician';  // Redirect using href
+  }
+  
 }

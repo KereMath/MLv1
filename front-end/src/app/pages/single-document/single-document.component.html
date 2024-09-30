@@ -2,7 +2,7 @@
 
 <div class="document-details">
   <h1>Document Insights</h1>
-  <p> {{ documentData.original_name }}</p>
+  <p>{{ documentData.original_name }}</p>
 
   <!-- CSV veya Excel Tablosunu Göster -->
   <table *ngIf="tableData.length > 0" class="data-table">
@@ -28,6 +28,10 @@
     <p>Page {{ currentPage + 1 }} of {{ getTotalPages() }}</p> <!-- Page display -->
   </div>
   
+  <!-- Statistician Panel button -->
+  <div class="statistician-panel">
+    <button (click)="goToStatistician()" class="statistician-btn">Statistician Panel</button>
+  </div>
 </div>
 
 <div class="background1">

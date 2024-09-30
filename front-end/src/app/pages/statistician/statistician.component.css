@@ -1,0 +1,189 @@
+/* General page styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #fad0c4);
+    background-size: 400% 400%;
+    animation: gradientShift 10s ease infinite;
+    color: #333;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #000;
+  }
+  
+  /* Canvas arka planı */
+  .page-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+    z-index: -1;
+  }
+  
+  #stars {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: radial-gradient(circle, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 80%, rgba(0,0,51,1) 100%);
+  }
+/* Gradient animation for background */
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Document container with added color */
+.documents-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #ffefd5;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease-in-out;
+    margin-top: 40px;
+}
+
+.documents-container h2 {
+    font-size: 26px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background-color 0.3s ease;
+}
+
+li:hover {
+    background-color: #ffe4e1;
+}
+
+li input[type="radio"] {
+    margin-right: 10px;
+    accent-color: #ff69b4;
+}
+
+/* Question container */
+.questions-container {
+    margin-top: 30px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Question box styled like a card */
+.question-box {
+    background-color: #f0f8ff;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+    border-left: 8px solid #ff69b4;
+    overflow: hidden;
+}
+
+.question-box:hover {
+    transform: translateY(-5px);
+}
+
+.question-box::before {
+    content: attr(data-question-number);
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    background-color: #ff69b4;
+    color: white;
+    padding: 10px 15px;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Question labels */
+label {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+/* Radio button styling */
+input[type="radio"] {
+    margin-right: 10px;
+    transform: scale(1.2);
+    accent-color: #ff69b4;
+}
+
+/* Additional questions section styling */
+.additional-questions h4 {
+    font-size: 22px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Proceed button styling */
+button {
+    padding: 12px 30px;
+    background-color: #ff69b4;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+    background-color: #ff1493;
+    transform: translateY(-3px);
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .documents-container {
+        padding: 15px;
+    }
+
+    .question-box {
+        padding: 15px;
+    }
+
+    button {
+        width: 100%;
+        padding: 15px;
+    }
+}
