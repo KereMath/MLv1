@@ -57,6 +57,42 @@ func callDjangoAPI(inputPath, outputPath string) error {
 	return nil
 }
 
+func deleteAllTempFiles(logFilePath string) error {
+	// Log dosyasını oku
+	data, err := ioutil.ReadFile(logFilePath)
+	if err != nil {
+		return fmt.Errorf("failed to read log file: %v", err)
+	}
+
+	// Tüm temp dosya path'lerini bul ve sil
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		if line == "" {
+			continue
+		}
+		parts := strings.Split(line, ",")
+		if len(parts) < 4 {
+			continue
+		}
+		tempFilePath := strings.TrimSpace(parts[3]) // Temp dosya yolunu al
+
+		// Dosyayı sil
+		if err := os.Remove(tempFilePath); err != nil && !os.IsNotExist(err) {
+			log.Printf("Failed to delete temp file: %s, error: %v", tempFilePath, err)
+		} else {
+			log.Printf("Deleted temp file: %s", tempFilePath)
+		}
+	}
+
+	// Log dosyasını temizle
+	err = ioutil.WriteFile(logFilePath, []byte(""), 0644)
+	if err != nil {
+		return fmt.Errorf("failed to clear log file: %v", err)
+	}
+
+	return nil
+}
+
 func main() {
 	// RabbitMQ'ya bağlan
 	conn, err := amqp.Dial("amqp://guest:guest@localhost:5672/")
@@ -153,6 +189,25 @@ func main() {
 				log.Printf("Error: The path is a directory, not a file: %s", fullDocumentPath)
 				continue
 			}
+			logFilePath := filepath.Join(parentDir, "logs", fmt.Sprintf("rabbitlog%s.txt", documentID))
+			err = os.MkdirAll(filepath.Dir(logFilePath), os.ModePerm)
+			if err != nil {
+				log.Fatalf("Failed to create logs directory: %v", err)
+			}
+			if questionID == "1" {
+				tempPaths[documentID]=fullDocumentPath
+				log.Printf("First question received, deleting all temp files for DocumentID: %s", documentID)
+				err := deleteAllTempFiles(logFilePath)
+				if err != nil {
+					log.Printf("Error deleting temp files: %v", err)
+					continue
+				}
+			}
+			// Log dosyasının yolu
+
+
+			// Eğer ilk soruysa, tüm eski temp dosyaları sil
+
 
 			// Mutex kullanarak map'e güvenli erişim
 			mu.Lock()
@@ -176,6 +231,8 @@ func main() {
 
 				newTempFilePath = fmt.Sprintf("%s_{%s_%s}%s", baseFileName, questionID, answer, ext) // uzantıyı en sona ekle
 				newTempFilePath = filepath.Join(tempDataDir, newTempFilePath) // scripts/tempdata içine kaydet
+				tempPaths[documentID]=newTempFilePath
+
 				err = ioutil.WriteFile(newTempFilePath, fileContent, 0644)
 				if err != nil {
 					log.Printf("Error creating temp file %s: %v", newTempFilePath, err)
@@ -227,14 +284,7 @@ func main() {
 				mu.Unlock()
 			}
 
-			 // Log dosyasına yazarken güncellenmiş dosya adını kullan
-			logFilePath := filepath.Join(parentDir, "logs", fmt.Sprintf("rabbitlog%s.txt", documentID))
-		 	logsDir := filepath.Join(parentDir, "logs")
-			err = os.MkdirAll(logsDir, os.ModePerm)
-			if err != nil {
-				log.Fatalf("Failed to create logs directory: %v", err)
-			}
-
+			// Log dosyasına yazarken güncellenmiş dosya adını kullan
 			logEntry := fmt.Sprintf("%s,%s,%s,%s\n", questionID, answer, documentID, newTempFilePath) // Güncellenmiş temp dosya yolu
 			f, err := os.OpenFile(logFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
 			if err != nil {
