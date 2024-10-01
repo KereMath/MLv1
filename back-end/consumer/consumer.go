@@ -56,6 +56,37 @@ func callDjangoAPI(inputPath, outputPath string) error {
 	log.Printf("Successfully called Django API for input: %s and output: %s", inputPath, outputPath)
 	return nil
 }
+// callDjangoAPI'yi imputation işlemi için güncelleyelim
+func callDjangoAPIimp(inputPath, outputPath string, answer string) error {
+	// Prepare the data to be sent to the Django API
+	data := map[string]interface{}{
+		"input_path":  inputPath,
+		"output_path": outputPath,
+		"answer":      answer,  // Veri doldurma işlemi için answer bilgisi
+	}
+
+	// Convert data to JSON
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return fmt.Errorf("failed to marshal data: %v", err)
+	}
+
+	// Send POST request to Django API for imputation
+	resp, err := http.Post("http://127.0.0.1:8000/app/data-imputation/", "application/json", bytes.NewBuffer(jsonData))
+	if err != nil {
+		return fmt.Errorf("failed to call Django API: %v", err)
+	}
+	defer resp.Body.Close()
+
+	// Check for a successful response
+	if resp.StatusCode != http.StatusOK {
+		body, _ := ioutil.ReadAll(resp.Body)
+		return fmt.Errorf("error from Django API: %v, response: %s", resp.Status, body)
+	}
+
+	log.Printf("Successfully called Django API for input: %s and output: %s", inputPath, outputPath)
+	return nil
+}
 
 func deleteAllTempFiles(logFilePath string) error {
 	// Log dosyasını oku
@@ -260,7 +291,7 @@ func main() {
 				newTempFilePath = filepath.Join(tempDataDir, newTempFilePath)
 
 				// Eğer ikinci sorunun cevabı "Option 1" ise Django API'yi çağır
-				if questionID == "2" && answer == "Option 1" {
+				if questionID == "2" && answer == "Yes" {
 					log.Printf("Calling Django API for second question Option 1")
 
 					// Call Django API to process the file
@@ -277,6 +308,18 @@ func main() {
 						continue
 					}
 				}
+// 3. soru geldiğinde Django API'yi imputation metoduyla çağır
+if questionID == "3" {
+    log.Printf("Third question received, calling Django API for imputation")
+
+    // Call Django API for imputation
+    err = callDjangoAPIimp(tempFilePath, newTempFilePath,answer)
+    if err != nil {
+        log.Printf("Error calling Django API for imputation: %v", err)
+        continue
+    }
+}
+
 
 				// Temp path'i güncelle
 				mu.Lock()

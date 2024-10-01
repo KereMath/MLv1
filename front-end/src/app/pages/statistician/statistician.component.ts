@@ -24,22 +24,65 @@ export class StatisticianComponent implements OnInit {
 
   selectedOption: string | null = null; // ML veya Report seçimi
   mlQuestions = [
-    'Question 1 for ML',
-    'Question 2 for ML',
-    'Question 3 for ML',
-    'Question 4 for ML',
-    'Question 5 for ML',
-    'Question 6 for ML',
-    'Question 7 for ML'
+    {
+      question: 'Delete data to simulate missing data',
+      options: ['Yes', 'No']
+    },
+    {
+      question: 'Which imputation method would you like to use for filling missing values?',
+      options: [
+        'constant', 
+        'mean', 
+        'median', 
+        'knn', 
+        'linear_regression', 
+        'multiple_imputation', 
+        'ffill', 
+        'bfill', 
+        'drop_rows', 
+        'drop_columns',
+        'pchip',
+        'linear_interpolation',
+        'neighbor_avg',
+        'mice'
+      ]
+    },
+    {
+      question: 'Question 3 for ML',
+      options: ['True', 'False']
+    }
   ];
+  
 
   reportQuestions = [
-    'Question 1 for Report',
-    'Question 2 for Report'
+    {
+      question: 'Delete data to simulate missing data',
+      options: ['Yes', 'No']
+    },
+    {
+      question: 'Which imputation method would you like to use for filling missing values?',
+      options: [
+        'constant', 
+        'mean', 
+        'median', 
+        'knn', 
+        'linear_regression', 
+        'multiple_imputation', 
+        'ffill', 
+        'bfill', 
+        'drop_rows', 
+        'drop_columns',
+        'pchip',
+        'linear_interpolation',
+        'neighbor_avg',
+        'mice'
+      ]
+    },
   ];
-
-  mlAnswers: string[] = Array(this.mlQuestions.length).fill('');
-  reportAnswers: string[] = Array(this.reportQuestions.length).fill('');
+  
+  mlAnswers: string[] = Array(this.mlQuestions.length).fill('');  // ML cevapları için boş array
+  reportAnswers: string[] = Array(this.reportQuestions.length).fill('');  // Report cevapları için boş array
+  
 
   currentQuestionIndex: number = 0;
 

@@ -1,1 +1,1 @@
-1,ml,66fa55763b293ffefe33a390,C:\Users\J.A.R.V.I.S\Desktop\dvm\back-end\scripts\tempdata\66fa55763b293ffefe33a390_{1_ml}.csv
+1,report,66fa55763b293ffefe33a390,C:\Users\J.A.R.V.I.S\Desktop\dvm\back-end\scripts\tempdata\66fa55763b293ffefe33a390_{1_report}.csv

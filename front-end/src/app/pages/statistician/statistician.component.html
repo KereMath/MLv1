@@ -34,40 +34,38 @@
 
 
     <!-- ML seçilmişse birer birer soruları göster -->
-    <div *ngIf="selectedOption === 'ml'" class="additional-questions">
-        <h4>Questions for ML Prediction:</h4>
-
-        <div *ngFor="let question of mlQuestions; let i = index">
+<!-- ML soruları için -->
+        <div *ngIf="selectedOption === 'ml'" class="additional-questions">
+            <h4>Questions for ML Prediction:</h4>
+        
+            <div *ngFor="let question of mlQuestions; let i = index">
             <div class="question-box" [attr.data-question-number]="i + 2" *ngIf="currentQuestionIndex === i + 1">
-                <label>{{ question }}</label>
-                <div>
-                    <input type="radio" name="ml-answer-{{i}}" value="Option 1" [(ngModel)]="mlAnswers[i]"> 1
-                    <input type="radio" name="ml-answer-{{i}}" value="Option 2" [(ngModel)]="mlAnswers[i]"> 2
-                    <input type="radio" name="ml-answer-{{i}}" value="Option 3" [(ngModel)]="mlAnswers[i]"> 3
+                <label>{{ question.question }}</label>
+                <div *ngFor="let option of question.options">
+                <input type="radio" [value]="option" [(ngModel)]="mlAnswers[i]" name="ml-answer-{{i}}">
+                <label>{{ option }}</label>
                 </div>
-                <!-- Call sendAnswerToBackend with the question ID and selected answer -->
                 <button [disabled]="!mlAnswers[i]" (click)="sendAnswerToBackend(i + 2, mlAnswers[i])">Run</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Rapor seçilmişse birer birer soruları göster -->
-    <div *ngIf="selectedOption === 'report'" class="additional-questions">
-        <h4>Questions for Report:</h4>
-
-        <div *ngFor="let question of reportQuestions; let i = index">
-            <div class="question-box" [attr.data-question-number]="i + 2" *ngIf="currentQuestionIndex === i + 1">
-                <label>{{ question }}</label>
-                <div>
-                    <input type="radio" name="report-answer-{{i}}" value="Option 1" [(ngModel)]="reportAnswers[i]"> 1
-                    <input type="radio" name="report-answer-{{i}}" value="Option 2" [(ngModel)]="reportAnswers[i]"> 2
-                    <input type="radio" name="report-answer-{{i}}" value="Option 3" [(ngModel)]="reportAnswers[i]"> 3
-                </div>
-                <!-- Call sendAnswerToBackend with the question ID and selected answer -->
-                <button [disabled]="!reportAnswers[i]" (click)="sendAnswerToBackend(i + 2, reportAnswers[i])">Run</button>
             </div>
         </div>
-    </div>
+        
+        <!-- Report soruları için -->
+        <div *ngIf="selectedOption === 'report'" class="additional-questions">
+            <h4>Questions for Report:</h4>
+        
+            <div *ngFor="let question of reportQuestions; let i = index">
+            <div class="question-box" [attr.data-question-number]="i + 2" *ngIf="currentQuestionIndex === i + 1">
+                <label>{{ question.question }}</label>
+                <div *ngFor="let option of question.options">
+                <input type="radio" [value]="option" [(ngModel)]="reportAnswers[i]" name="report-answer-{{i}}">
+                <label>{{ option }}</label>
+                </div>
+                <button [disabled]="!reportAnswers[i]" (click)="sendAnswerToBackend(i + 2, reportAnswers[i])">Run</button>
+            </div>
+            </div>
+        </div>
+        
 
     <!-- Proceed button -->
     <button [disabled]="!canProceed()" (click)="proceed()">Proceed</button>
